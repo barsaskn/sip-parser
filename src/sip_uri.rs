@@ -9,7 +9,10 @@ impl SipUri {
         SipUri { ip, port, username }
     }
 
-    pub fn parse(uri_str: &str) -> SipUri {
+    pub fn parse(uri_str: &str) -> Option<SipUri> {
+        if uri_str.is_empty() {
+            return None;
+        }
         let mut port: u16 = 5060;
         let parts: Vec<&str> = uri_str.split('@').collect();
 
@@ -30,7 +33,7 @@ impl SipUri {
 
         let ip: String = address_parts[0].to_string();
 
-        SipUri { ip, port, username }
+        Some(SipUri { ip, port, username })
     }
 
     // Getter methods
@@ -65,7 +68,7 @@ mod tests {
     use crate::SipUri;
     #[test]
     fn uri_parse_test() {
-        let result = SipUri::parse("sip:test@example.com:5060");
+        let result = SipUri::parse("sip:test@example.com:5060").unwrap();
         assert_eq!(result.get_username(), "test");
         assert_eq!(result.get_ip(), "example.com");
         assert_eq!(result.get_port(), 5060);
@@ -73,9 +76,15 @@ mod tests {
 
     #[test]
     fn uri_parse_test_without_port() {
-        let result = SipUri::parse("sip:test@example.com");
+        let result = SipUri::parse("sip:test@example.com").unwrap();
         assert_eq!(result.get_username(), "test");
         assert_eq!(result.get_ip(), "example.com");
         assert_eq!(result.get_port(), 5060);
+    }
+
+    #[test]
+    fn uri_parse_test_empty_string() {
+        let result = SipUri::parse("");
+        assert_eq!(result.is_none(), true);
     }
 }
