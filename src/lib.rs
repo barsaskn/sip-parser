@@ -1,15 +1,12 @@
 mod constants;
 mod sip_uri;
+mod sip_user;
 
 pub use constants::Method;
 pub use constants::Transport;
 pub use sip_uri::SipUri;
+pub use sip_user::SipUser;
 
-
-pub struct SipUser {
-    pub uri: SipUri,
-    pub tag: String
-}
 pub struct SipPacket {
     pub method: Method,
     pub transport: Transport,
@@ -19,6 +16,5 @@ pub struct SipPacket {
     pub call_id: String, //may change
     pub user_agent: String,
     pub expires: u32,
-    pub contact: SipUser
+    pub contact: SipUser,
 }
-

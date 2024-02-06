@@ -10,25 +10,25 @@ impl SipUri {
     }
 
     pub fn parse(uri_str: &str) -> SipUri {
+        let mut port: u16 = 5060;
         let parts: Vec<&str> = uri_str.split('@').collect();
-        
+
         if parts.len() != 2 {
             panic!("Invalid SIP URI format");
         }
 
-        let mut username = parts[0].to_string();
+        let mut username: String = parts[0].to_string();
         if username.starts_with("sip:") {
             username = username["sip:".len()..].to_string();
         }
 
         let address_parts: Vec<&str> = parts[1].split(':').collect();
 
-        if address_parts.len() != 2 {
-            panic!("Invalid SIP URI format");
+        if address_parts.len() == 2 {
+            port = address_parts[1].parse().expect("Invalid port number");
         }
 
-        let ip = address_parts[0].to_string();
-        let port: u16 = address_parts[1].parse().expect("Invalid port number");
+        let ip: String = address_parts[0].to_string();
 
         SipUri { ip, port, username }
     }
@@ -60,13 +60,20 @@ impl SipUri {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::SipUri;
     #[test]
     fn uri_parse_test() {
         let result = SipUri::parse("sip:test@example.com:5060");
+        assert_eq!(result.get_username(), "test");
+        assert_eq!(result.get_ip(), "example.com");
+        assert_eq!(result.get_port(), 5060);
+    }
+
+    #[test]
+    fn uri_parse_test_without_port() {
+        let result = SipUri::parse("sip:test@example.com");
         assert_eq!(result.get_username(), "test");
         assert_eq!(result.get_ip(), "example.com");
         assert_eq!(result.get_port(), 5060);

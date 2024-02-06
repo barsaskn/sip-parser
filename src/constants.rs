@@ -12,11 +12,11 @@ pub enum Method {
     SUBSCRIBE,
     NOTIFY,
     REFER,
-    PUBLISH
+    PUBLISH,
 }
 
 pub enum Transport {
     UDP,
     TCP,
-    TLS
+    TLS,
 }
