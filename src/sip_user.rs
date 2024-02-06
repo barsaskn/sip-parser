@@ -24,12 +24,11 @@ impl SipUser {
         }
 
         let uri_part = parts[0].trim().trim_matches(|c| c == '<' || c == '>');
-        let mut uri: Option<SipUri> = None; 
         if SipUri::parse(uri_part).is_some() {
-            uri =  SipUri::parse(uri_part);
+            let uri: Option<SipUri> = SipUri::parse(uri_part);
+            return Some(SipUser { uri, tag });
         }
-
-        return Some(SipUser { uri, tag });
+        return None;
     }
 
     // Getter methods
@@ -87,6 +86,12 @@ mod tests {
     #[test]
     fn sip_user_parse_test_empty_string() {
         let result = SipUser::parse("");
+        assert_eq!(result.is_none(), true);
+    }
+
+    #[test]
+    fn sip_user_parse_test_random_string() {
+        let result = SipUser::parse("Random String");
         assert_eq!(result.is_none(), true);
     }
 }

@@ -17,7 +17,7 @@ impl SipUri {
         let parts: Vec<&str> = uri_str.split('@').collect();
 
         if parts.len() != 2 {
-            panic!("Invalid SIP URI format");
+            return None;
         }
 
         let mut username: String = parts[0].to_string();
@@ -85,6 +85,12 @@ mod tests {
     #[test]
     fn uri_parse_test_empty_string() {
         let result = SipUri::parse("");
+        assert_eq!(result.is_none(), true);
+    }
+
+    #[test]
+    fn uri_parse_test_random_string() {
+        let result = SipUri::parse("Random string");
         assert_eq!(result.is_none(), true);
     }
 }
