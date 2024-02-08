@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct SipUri {
     ip: String,
     port: u16,
@@ -9,15 +10,15 @@ impl SipUri {
         SipUri { ip, port, username }
     }
 
-    pub fn parse(uri_str: &str) -> Option<SipUri> {
+    pub fn parse(uri_str: &str) -> Result<SipUri, String> {
         if uri_str.is_empty() {
-            return None;
+            return Err("[SipUri] Parsing error: Empty parameter".to_string());
         }
         let mut port: u16 = 5060;
         let parts: Vec<&str> = uri_str.split('@').collect();
 
         if parts.len() != 2 {
-            return None;
+            return Err("[SipUri] Parsing error: Invalid format".to_string());
         }
 
         let mut username: String = parts[0].to_string();
@@ -33,7 +34,7 @@ impl SipUri {
 
         let ip: String = address_parts[0].to_string();
 
-        Some(SipUri { ip, port, username })
+        Ok(SipUri { ip, port, username })
     }
 
     // Getter methods
@@ -85,12 +86,12 @@ mod tests {
     #[test]
     fn uri_parse_test_empty_string() {
         let result = SipUri::parse("");
-        assert_eq!(result.is_none(), true);
+        assert_eq!(result.is_err(), true);
     }
 
     #[test]
     fn uri_parse_test_random_string() {
         let result = SipUri::parse("Random string");
-        assert_eq!(result.is_none(), true);
+        assert_eq!(result.is_err(), true);
     }
 }
