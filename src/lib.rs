@@ -1,9 +1,9 @@
-mod constants;
+mod sip_constants;
 mod sip_uri;
 mod sip_user;
 
-pub use constants::Method;
-pub use constants::Transport;
+pub use sip_constants::Method;
+pub use sip_constants::Transport;
 pub use sip_uri::SipUri;
 pub use sip_user::SipUser;
 
